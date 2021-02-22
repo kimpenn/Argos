@@ -10,6 +10,9 @@ Run R -e "install.packages('shinyjs')"
 Run R -e "install.packages('shinymanager')"
 Run R -e "install.packages('reactlog')"
 Run R -e "install.packages('styler')"
+Run R -e "install.packages('reactR')"
+Run R -e "install.packages('listviewer')"
+Run R -e "install.packages('rjson')"
 
 # COPY main.R /home/rstudio/main.R
 # ENTRYPOINT ["Rscript", "/home/rstudio/main.R"]

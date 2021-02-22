@@ -1,82 +1,33 @@
 server <- function(input, output, session) {
   ####################################
-  # DeBUG
+  # Security
   ####################################
-  # output$text <- renderPrint({
-  #   req(input$select_symbols)
-  #   cat("As string:\n")
-  #   print(input$select_symbols)
-  # })
-  #
-  # observe({
-  #   print("Hello")
-  #   print(paste0("input$tab: ", input$tab))
-  #   cat("length(input$select_symbols):",
-  #       length(input$select_symbols),
-  #       "\n")
-  # })
-  res_auth <- secure_server(
-    check_credentials = check_credentials(credentials)
-  )
+  # res_auth <- secure_server(
+  #   check_credentials = check_credentials(credentials)
+  # )
   ####################################
-  # Server: Tab 0 Data Upload
+  # Server: Data Loader
   ####################################
-  shinyDirChoose(input,
-                 'folder',
-                 roots = c(wd = '.'),
-                 filetypes = c('', 'txt'))
   globals <- reactiveValues(the_table = NULL, ori_data = NULL)
-  observe({
-    req(globals)
-    req(length(input$folder) > 1)
-    print(input$folder)
-    globals$dir <- get_path(input$folder)
+  argosDataSet <- dataLoaderSever("dataLoader")
+  
+  ####################################
+  # Server: Gene List Manager
+  ####################################
+  # argosGeneList <- geneListManagerServer("geneListManager",
+                                         # argosDataSet)
+  observeEvent(argosDataSet$geneUniverse, {
+    req(argosDataSet$geneUniverse)
+    res <- geneListManagerServer("geneListManager",
+                                 argosDataSet$geneUniverse)
+    print("res() in server.R:")
+    print(res())
   })
   
-  output$upload_log <- renderText({
-    INFO_STR
-  })
-  
-  
-  observeEvent(input$load_data_button, {
-    req(globals$dir)
-    str <- "Loding count matrix...\n"
-    output$upload_log <- renderText({
-      str
-    })
-    globals$my_data <-
-      load_dataset(file.path(globals$dir, "counts.csv"))
-    globals$ori_data <- globals$my_data
-    globals$the_table <- globals$my_data
-    str <- paste0(str, "Loding Normalized count matrix...\n")
-    output$upload_log <- renderText({
-      str
-    })
-    globals$norm_data <-
-      load_dataset(file.path(globals$dir, "norm-counts.csv"))
-    str <- paste0(str, "Loding design matrix...\n")
-    output$upload_log <- renderText({
-      str
-    })
-    globals$my_coldata <-
-      load_coldata(file.path(globals$dir, "design_tbl.csv"))
-    str <- paste0(str, "Loding corner stone gene list...\n")
-    output$upload_log <- renderText({
-      str
-    })
-    globals$my_corner_stone <-
-      read_csv(file.path(globals$dir, "corner_stone.csv"),
-               col_names = FALSE)[["X1"]]
-    
-    # if (dir.exists(file.path(globals$dir, "images"))) {
-    #   str <- paste0(str, "Found image directory!\n")
-    # } else{
-    #   str <- paste0(str, "WARNING: Cannot find image directory!\n")
-    # }
-    str <- paste0(str, "Done!\n")
-    
-  })
-  
+  # observe({
+  #   print("argosGeneList in server.R:")
+  #   print(argosGeneList())
+  # })
   ####################################
   # Server: Tab 1 Data Exploration
   ####################################
@@ -125,7 +76,7 @@ server <- function(input, output, session) {
                {
                  if (length(input$select_symbols) > 0) {
                    idx <-  globals$my_data$Symbol %in% input$select_symbols
-                   globals$the_table <- globals$ori_data[idx,]
+                   globals$the_table <- globals$ori_data[idx, ]
                  } else{
                    globals$the_table <- globals$ori_data
                  }
@@ -159,7 +110,7 @@ server <- function(input, output, session) {
     
     if (input$tab == "time_series") {
       globals$the_plot_data <-
-        globals$norm_data[rowSums(globals$norm_data[-1]) != 0, ]
+        globals$norm_data[rowSums(globals$norm_data[-1]) != 0,]
       globals$the_plot_col_data <- globals$my_coldata
       updateSelectInput(session,
                         "select_symbols_2",
@@ -248,7 +199,7 @@ server <- function(input, output, session) {
     updateSelectInput(session, "select_outliers",
                       choices = globals$plot_1_out_lier)
   })
-
+  
   observeEvent(input$select_outliers, {
     req(input$select_outliers)
     
@@ -275,9 +226,11 @@ server <- function(input, output, session) {
   ##################################
   observeEvent(input$select_cell_image_group, {
     req(input$select_cell_image_group)
-    updateSelectInput(session,
-                      "select_cell_image_id",
-                      choices = get_sample_list(input$select_cell_image_group, globals$my_coldata))
+    updateSelectInput(
+      session,
+      "select_cell_image_id",
+      choices = get_sample_list(input$select_cell_image_group, globals$my_coldata)
+    )
   })
   
   observeEvent(input$select_cell_image_id, {
@@ -285,7 +238,9 @@ server <- function(input, output, session) {
     
     file_name <-
       paste0(
-        tolower(strsplit(input$select_cell_image_id, ".", fixed = TRUE)[[1]][2]),
+        tolower(strsplit(
+          input$select_cell_image_id, ".", fixed = TRUE
+        )[[1]][2]),
         "-",
         strsplit(input$select_cell_image_id, ".", fixed = TRUE)[[1]][3],
         "-",

@@ -2,15 +2,15 @@ library(shiny)
 
 # library(profvis)
 # profvis({
-  # source("R/global.R")
-  # source("R/cal_perc.R")
-  # source("R/is_outlier.R")
-  # source("R/plot_fig_1.R")
-  # source("R/plot_fig_2.R")
-  # source("R/server.R")
-  # source("R/ui.R")
+# source("R/global.R")
+# source("R/cal_perc.R")
+# source("R/is_outlier.R")
+# source("R/plot_fig_1.R")
+# source("R/plot_fig_2.R")
+# source("R/server.R")
+# source("R/ui.R")
 shinyApp(ui, server)
-  # runApp(app)
+# runApp(app)
 # })
 # the_file <- "."
 # for (idx in seq_along(my_data$path)){

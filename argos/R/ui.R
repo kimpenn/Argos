@@ -4,32 +4,16 @@ ui <- dashboardPage(
   dashboardSidebar(
     sidebarMenu(
       id = "tab",
-      menuItem("Data Upload", tabName = "data_upload"),
+      menuItem("Data Loader", tabName = "data_upload"),
+      menuItem("Gene List Manager", tabName = "gene_list_manager"),
       menuItem("Data Exploration", tabName = "data_exp"),
       menuItem("Time Series Inspection", tabName = "time_series")
     )),
   
   dashboardBody(useShinyjs(),
                 tabItems(
-                  tabItem(
-                    tabName = "data_upload",
-                    h2("Upload Dataset"),
-                    fluidRow(wellPanel(
-                      shinyFiles::shinyDirButton(
-                        'folder',
-                        'Select a folder',
-                        'Please select a folder',
-                        FALSE,
-                        class = "btn-success"
-                      )
-                    )),
-                    fluidRow(wellPanel(
-                      actionButton("load_data_button",
-                                   "Upload Data",
-                                   class = "btn-primary")
-                    )),
-                    fluidRow(wellPanel(verbatimTextOutput("upload_log")))
-                  ),
+                  dataLoaderUI("dataLoader"),
+                  geneListManagerUI("geneListManager"),
                   tabItem(
                     tabName = "data_exp",
                     h2(textOutput('title')),
@@ -127,4 +111,4 @@ ui <- dashboardPage(
                 ))
 )
 
-ui <- secure_app(ui)
+# ui <- secure_app(ui)
