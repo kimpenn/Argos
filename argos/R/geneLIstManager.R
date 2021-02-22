@@ -62,7 +62,7 @@ geneListManagerUI <- function(id) {
       ),
       mainPanel(wellPanel(
         h3("Preview the Gene Lists"),
-        reactjsonOutput(ns("rjed"), height="650px")
+        reactjsonOutput(ns("rjed"), height = "650px")
       ))
     )
   )
@@ -70,15 +70,21 @@ geneListManagerUI <- function(id) {
 
 # Server function ----------------
 # Return: geneListDataframe
-geneListManagerServer <- function(id, geneUniverse) {
-  stopifnot(is.reactive(geneUniverse))
+geneListManagerServer <- function(id, dataset) {
+  # stopifnot(is.reactive(dataset))
+  # if (!is.reactive(dataset))
+  #   return(NULL)
+  # else
+  #   print(dataset$geneUniverse())
   
   moduleServer(id, function(input, output, session) {
     geneList <- reactiveVal(list())
     #####################################
     # Upload Gene List CSV File
     #####################################
-    observeEvent(input$user_gene_list_csv, {
+    # observeEvent(input$user_gene_list_csv, {
+    observe({
+      req(input$user_gene_list_csv)
       geneList(fromJSON(
         file = input$user_gene_list_csv$datapath,
         simplify = FALSE
@@ -89,22 +95,35 @@ geneListManagerServer <- function(id, geneUniverse) {
     # Add New Gene List
     #####################################
     observeEvent(input$btn_add_gene_list, {
+      req(geneList)
       the_list <- geneList()
-      the_list[[input$new_gene_list_name]] <- as.list(input$new_gene_list)
+      the_list[[input$new_gene_list_name]] <-
+        as.list(input$new_gene_list)
       geneList(the_list)
     })
     
-    observeEvent(geneUniverse(), {
-      updateSelectizeInput(session,
-                           "new_gene_list",
-                           choices = geneUniverse(),
-                           server = TRUE)
+    # observe({
+    #   cat("is.reactive(dataset)", is.reactive(dataset), "\n")
+    #   cat("is.reactive(dataset$geneUniverse)",
+    #       is.reactive(dataset$geneUniverse),
+    #       "\n")
+    # })
+    
+    observe({
+      req(dataset$geneUniverse)
+      updateSelectizeInput(
+        session,
+        "new_gene_list",
+        choices = dataset$geneUniverse(),
+        server = TRUE
+      )
     })
     
     #####################################
     # Remove New Gene List
     #####################################
     observeEvent(geneList(), {
+      req(geneList)
       updateSelectizeInput(
         session,
         "remove_gene_list",
@@ -127,14 +146,17 @@ geneListManagerServer <- function(id, geneUniverse) {
         paste("geneList", ".json", sep = "")
       },
       content = function(file) {
-        print(geneList())
-        cat(toJSON(geneList(), indent = 4),file=file,sep="\n")
+        # print(geneList())
+        cat(toJSON(geneList(), indent = 4),
+            file = file,
+            sep = "\n")
       }
     )
     #####################################
     # Render a JSON VIEWER
     #####################################
     output$rjed <- renderReactjson({
+      req(geneList)
       reactjson(
         geneList(),
         name = "GeneListSets",
