@@ -22,4 +22,4 @@ ui <- dashboardPage(
   )
 )
 
-# ui <- secure_app(ui)
+ui <- secure_app(ui)

@@ -4,6 +4,7 @@ library(shinydashboard)
 library(shinyFiles)
 library(shinyjs)
 library(shinymanager)
+library(reactR)
 library(listviewer)
 library(rjson)
 
