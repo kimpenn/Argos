@@ -108,7 +108,7 @@ plot_fig_1 <-
         size = 5
       )
     res_list <- list(p, plot_df$out_lier[!is.na(plot_df$out_lier)])
-    saveRDS(res_list, "my_data.Rds")
+    # saveRDS(res_list, "my_data.Rds")
     return(res_list)
   }
 # input_data <- my_data_norm

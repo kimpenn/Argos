@@ -142,9 +142,11 @@ matrixExplorerServer <- function(id, dataset, geneList) {
       if (isNormalized()) {
         theMatrix(dataset$rawData())
         isNormalized(FALSE)
+        isRelatived(FALSE)
       } else{
         theMatrix(dataset$normData())
         isNormalized(TRUE)
+        isRelatived(FALSE)
       }
     })
     
