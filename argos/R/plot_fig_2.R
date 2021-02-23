@@ -55,10 +55,11 @@ plot_fig_2 <-
            input_target,
            input_gene_list) {
     ##################################
-    # Figuers 2: Gene Mean Counts with Annotation acroos Treatment
+    # Figuers 2: Gene Mean Counts with Annotation across Treatment
     ##################################
-    the_data <- as.data.frame(input_data[-1])
-    row.names(the_data) <- input_data$Symbol
+    # the_data <- as.data.frame(input_data[-1])
+    # row.names(the_data) <- input_data$Symbol
+    the_data <- input_data
     treatment_list <- input_col_data$Group
     
     # Generate Annotation -------------------

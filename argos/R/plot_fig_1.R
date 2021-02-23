@@ -31,9 +31,9 @@ plot_fig_1 <-
     cat("input_target:", input_target, "\n")
     cat("input_gene_list:", input_gene_list, "\n")
     
-    the_data <- as.data.frame(input_data[-1])
-    row.names(the_data) <- input_data$Symbol
-
+    # the_data <- as.data.frame(input_data[-1])
+    # row.names(the_data) <- input_data$Symbol
+    the_data <- input_data
     percent_list <- list(c(), c(), c(), c(), c())
     names(percent_list) <-
       c("group_c", "group_1", "group_2", "group_3", "group_7")

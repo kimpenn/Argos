@@ -5,124 +5,33 @@ server <- function(input, output, session) {
   # res_auth <- secure_server(
   #   check_credentials = check_credentials(credentials)
   # )
-  ####################################
+ 
+   ####################################
   # Server: Data Loader
   ####################################
   globals <- reactiveValues(the_table = NULL, ori_data = NULL)
   argosDataSet <- dataLoaderSever("dataLoader")
   # is.reactive(argosDataSet) FALSE 
   # is.reactive(argosDataSet$geneUniverse) TRUE
+ 
   ####################################
   # Server: Gene List Manager
   ####################################
   argosGeneList <- geneListManagerServer("geneListManager",
   argosDataSet)
-  # observe({
-  #   req(argosGeneList)
-  #   print("argosGeneList in server.R:")
-  #   print(argosGeneList())
-  # })
-  
+
   ####################################
   # Server: Tab 1 Data Exploration
   ####################################
-  
-  matrixExplorerServer("matrixExplorer", 
+  matrixExplorerServer("matrixExplorer",
                    argosDataSet, argosGeneList)
-  
-  # observeEvent(input$relative_button,
-  #              {
-  #                if (dim(globals$the_table)[1] < 100) {
-  #                  globals$the_table <- cal_percent(globals$the_table)
-  #                }
-  # 
-  #              })
+
   # ####################################
   # # Server: Tab 2 Time Series Inspection
   # ####################################
-  # observeEvent(input$fig_1_tig_button, {
-  #   toggle("fig_1")
-  # })
-  # observeEvent(input$fig_2_tig_button, {
-  #   toggle("fig_2")
-  # })
-  # observeEvent(input$tab, {
-  #   print(input$tab)
-  #   
-  #   if (input$tab == "time_series") {
-  #     globals$the_plot_data <-
-  #       globals$norm_data[rowSums(globals$norm_data[-1]) != 0,]
-  #     globals$the_plot_col_data <- globals$my_coldata
-  #     updateSelectInput(session,
-  #                       "select_symbols_2",
-  #                       choices = globals$the_plot_data$Symbol)
-  #   } else{
-  #     globals$the_table <- globals$my_data
-  #     globals$ori_data <- globals$my_data
-  #     globals$norm_flg <- FALSE
-  #     updateSelectInput(session, "select_symbols",
-  #                       choices = globals$my_data$Symbol)
-  #   }
-  # })
-  # 
-  # observeEvent(input$load_button_2, {
-  #   updateSelectInput(session, "select_symbols_2",
-  #                     selected = globals$my_corner_stone)
-  # })
-  # 
-  # observeEvent(input$select_symbols_2, {
-  #   if (length(input$select_symbols_2) > 0) {
-  #     updateSelectInput(session, "select_target",
-  #                       choices = input$select_symbols_2)
-  #   } else{
-  #     updateSelectInput(session, "select_target",
-  #                       choices = character(0))
-  #   }
-  # })
-  # 
-  # output$plot1 <- renderPlot({
-  #   print("Get into plot1...")
-  #   req(globals$the_plot_data)
-  #   req(globals$the_plot_col_data)
-  #   req(input$select_target)
-  #   req(input$select_symbols_2)
-  #   req(input$select_target %in% input$select_symbols_2)
-  #   print("Drawing!!!!")
-  #   cat("input$select_target: ",
-  #       length(input$select_target),
-  #       "\n")
-  #   cat("input$select_symbols_2: ",
-  #       length(input$select_symbols_2),
-  #       "\n")
-  #   
-  #   res <-
-  #     plot_fig_1(
-  #       globals$the_plot_data,
-  #       globals$the_plot_col_data,
-  #       input$select_target,
-  #       input$select_symbols_2
-  #     )
-  #   globals$plot_1_out_lier <- res[[2]]
-  #   res[[1]]
-  #   
-  # })
-  # 
-  # output$plot2 <- renderPlot({
-  #   print("Get into plot2...")
-  #   req(globals$the_plot_data)
-  #   req(globals$the_plot_col_data)
-  #   req(input$select_target)
-  #   req(input$select_symbols_2)
-  #   req(input$select_target %in% input$select_symbols_2)
-  #   print("Drawing!!!!")
-  #   plot_fig_2(
-  #     globals$the_plot_data,
-  #     globals$the_plot_col_data,
-  #     input$select_target,
-  #     input$select_symbols_2
-  #   )
-  # })
-  # 
+  timeSeriesExplorerServer("timeSeriesExplorer",
+                       argosDataSet, argosGeneList)
+
   # ###################################
   # # Cell Images: Outliers
   # ##################################

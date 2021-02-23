@@ -1,4 +1,4 @@
-cell_image_ui <- function() {
+cell_image_ui <- function(ns) {
   fluidRow(
     ###################################
     # Column 1: Outlier Images
@@ -9,20 +9,17 @@ cell_image_ui <- function() {
       status = "warning",
       wellPanel(
         selectInput(
-          "select_outliers"
-          ,
-          "Select the image of the outliers"
-          ,
-          choices = character(0)
-          ,
+          ns("select_outliers"),
+          "Select the image of the outliers",
+          choices = character(0),
           multiple = FALSE
         )
       ),
       tabBox(
         width = 12,
         id = "photos",
-        tabPanel("Before", uiOutput("outlier_img_before")),
-        tabPanel("After", uiOutput("outlier_img_after"))
+        tabPanel("Before", uiOutput(ns("outlier_img_before"))),
+        tabPanel("After", uiOutput(ns("outlier_img_after")))
       )
     ),
     ###################################
@@ -36,25 +33,19 @@ cell_image_ui <- function() {
         column(
           width = 6,
           selectInput(
-            "select_cell_image_group"
-            ,
-            "Select the cell group"
-            ,
+            ns("select_cell_image_group"),
+            "Select the cell group",
             selected = "c",
-            choices = c("c", "1", "2", "3", "7")
-            ,
+            choices = c("c", "1", "2", "3", "7"),
             multiple = FALSE
           )
         ),
         column(
           width = 6,
           selectInput(
-            "select_cell_image_id"
-            ,
-            "Select the cell id"
-            ,
-            choices = character(0)
-            ,
+            ns("select_cell_image_id"),
+            "Select the cell id",
+            choices = character(0),
             multiple = FALSE
           )
         )
@@ -63,8 +54,8 @@ cell_image_ui <- function() {
       tabBox(
         width = 12,
         id = "any-photos",
-        tabPanel("Before", uiOutput("any_img_before")),
-        tabPanel("After", uiOutput("any_img_after"))
+        tabPanel("Before", uiOutput(ns("any_img_before"))),
+        tabPanel("After", uiOutput(ns("any_img_after")))
       )
     )
   )

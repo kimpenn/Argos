@@ -21,7 +21,7 @@ shinyApp(ui, server)
 #   }
 # }
 
-# btn_reset_subset
-# btn_reset_relative
-# isRelatived
-# isNormalized
+    # currentGeneList <- reactiveVal()
+    # theMatrix <- reactiveVal()
+    # thePlotMatrix <- reactiveVal()
+    # theOutliers <- reactiveVal()
