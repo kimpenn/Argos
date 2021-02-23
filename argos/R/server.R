@@ -26,71 +26,17 @@ server <- function(input, output, session) {
   ####################################
   # Server: Tab 1 Data Exploration
   ####################################
-  globals$norm_flg <- FALSE
-
-  output$contents <- DT::renderDataTable({
-    datatable(globals$the_table) %>%
-      formatRound(columns = colnames(globals$the_table)[-1],
-                  digits = 2)
-  })
-
-  output$title <- renderText({
-    "Raw Counts"
-  })
-
-  observeEvent(input$norm_button, {
-    if (globals$norm_flg) {
-      output$title <- renderText({
-        "Raw Counts"
-      })
-      globals$the_table <- globals$my_data
-      globals$ori_data <- globals$my_data
-    } else{
-      output$title <- renderText({
-        "Normalized Counts"
-      })
-      globals$the_table <- globals$norm_data
-      globals$ori_data <- globals$norm_data
-    }
-    globals$norm_flg <- !globals$norm_flg
-  })
-
-  observeEvent(input$load_button, {
-    print("trigger!")
-    print(globals$my_corner_stone)
-    updateSelectInput(session, "select_symbols",
-                      selected = globals$my_corner_stone)
-    cat("length(input$select_symbols)",
-        length(input$select_symbols),
-        "\n")
-
-  })
-
-
-  observeEvent(input$subset_button,
-               {
-                 if (length(input$select_symbols) > 0) {
-                   idx <-  globals$my_data$Symbol %in% input$select_symbols
-                   globals$the_table <- globals$ori_data[idx, ]
-                 } else{
-                   globals$the_table <- globals$ori_data
-                 }
-               })
-
-  observeEvent(input$reset_button,
-               {
-                 updateSelectInput(session, "select_symbols",
-                                   selected = character(0))
-                 globals$the_table <- globals$ori_data
-               })
-
-  observeEvent(input$relative_button,
-               {
-                 if (dim(globals$the_table)[1] < 100) {
-                   globals$the_table <- cal_percent(globals$the_table)
-                 }
-
-               })
+  
+  matrixExplorerServer("matrixExplorer", 
+                   argosDataSet, argosGeneList)
+  
+  # observeEvent(input$relative_button,
+  #              {
+  #                if (dim(globals$the_table)[1] < 100) {
+  #                  globals$the_table <- cal_percent(globals$the_table)
+  #                }
+  # 
+  #              })
   # ####################################
   # # Server: Tab 2 Time Series Inspection
   # ####################################

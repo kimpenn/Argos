@@ -14,47 +14,8 @@ ui <- dashboardPage(
                 tabItems(
                   dataLoaderUI("dataLoader"),
                   geneListManagerUI("geneListManager"),
-                  tabItem(
-                    tabName = "data_exp",
-                    h2(textOutput('title')),
-                    
-                    fluidRow(wellPanel(
-                      selectInput(
-                        "select_symbols"
-                        ,
-                        "Subset the table by the following Symbols"
-                        ,
-                        choices = character(0)
-                        ,
-                        multiple = TRUE
-                      ),
-                      actionButton("load_button",
-                                   "Load Cornerstones",
-                                   class = "btn-secondary"),
-                      actionButton("subset_button",
-                                   "Subset Table",
-                                   class = "btn-primary")
-                    )),
-                    fluidRow(wellPanel(
-                      actionButton("norm_button",
-                                   "Raw/Normalized",
-                                   class = "btn-success"),
-                      actionButton("reset_button",
-                                   "Reset Table",
-                                   class = "btn-warning"),
-                      actionButton("relative_button",
-                                   "Relative Amts",
-                                   class = "btn-primary")
-                    )),
-                    fluidRow(
-                      box(
-                        width = 12,
-                        # height = 1024,
-                        DT::dataTableOutput("contents"),
-                        style = "overflow-y: scroll; overflow-x: scroll;"
-                      )
-                    )
-                  ),
+                  matrixExplorerUI("matrixExplorer"),
+                  
                   tabItem(
                     tabName = "time_series",
                     h2('Time Series Inspection on Gene'),

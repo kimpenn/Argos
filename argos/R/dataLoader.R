@@ -78,13 +78,18 @@ dataLoaderSever <- function(id) {
       str <- paste0(str, "Loding count matrix...\n")
       dataSet$rawData <-
         reactive(load_dataset(file.path(datasetPath(), "counts.csv")))
+      
       str <- paste0(str, "Loding Normalized count matrix...\n")
       dataSet$normData <-
         reactive(load_dataset(file.path(datasetPath(), "norm-counts.csv")))
+      
       str <- paste0(str, "Loding Column Data...\n")
       dataSet$colData <-
         reactive(load_coldata(file.path(datasetPath(), "design_tbl.csv")))
-      dataSet$geneUniverse <- reactive(dataSet$rawData()$Symbol)
+      
+      str <- paste0(str, "Extracting Gene Symbols from the Data...\n")
+      dataSet$geneUniverse <- reactive(rownames(dataSet$rawData()))
+      
       str <- paste0(str, "Done!\n")
       output$upload_log <- renderText({str})
     })

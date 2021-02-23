@@ -72,10 +72,6 @@ geneListManagerUI <- function(id) {
 # Return: geneListDataframe
 geneListManagerServer <- function(id, dataset) {
   # stopifnot(is.reactive(dataset))
-  # if (!is.reactive(dataset))
-  #   return(NULL)
-  # else
-  #   print(dataset$geneUniverse())
   
   moduleServer(id, function(input, output, session) {
     geneList <- reactiveVal(list())
@@ -95,6 +91,8 @@ geneListManagerServer <- function(id, dataset) {
     # Add New Gene List
     #####################################
     observeEvent(input$btn_add_gene_list, {
+      req(input$new_gene_list_name)
+      req(input$new_gene_list)
       req(geneList)
       the_list <- geneList()
       the_list[[input$new_gene_list_name]] <-
@@ -138,6 +136,7 @@ geneListManagerServer <- function(id, dataset) {
       the_list[[input$remove_gene_list]] <- NULL
       geneList(the_list)
     })
+    
     #####################################
     # Download the a JSON file
     #####################################
@@ -152,6 +151,7 @@ geneListManagerServer <- function(id, dataset) {
             sep = "\n")
       }
     )
+    
     #####################################
     # Render a JSON VIEWER
     #####################################

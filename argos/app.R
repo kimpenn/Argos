@@ -20,3 +20,8 @@ shinyApp(ui, server)
 #     print(the_file)
 #   }
 # }
+
+# btn_reset_subset
+# btn_reset_relative
+# isRelatived
+# isNormalized

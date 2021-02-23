@@ -5,11 +5,11 @@
 #   z = x ^ 2 + y
 # )
 
-cal_percent <- function(df){
-  df %>% 
-    select(colnames(df)[-1]) %>%
-    lapply(function(x) x / sum(x) * 100) %>%
-    as.data.frame() %>%
-    as_tibble() -> df[colnames(df)[-1]]
-  return(df)
+cal_percent <- function(df) {
+  res <- df %>%
+    lapply(function(x)
+      x / sum(x) * 100) %>%
+    as.data.frame()
+  rownames(res) <- rownames(df)
+  res
 }

@@ -5,12 +5,15 @@ library(shinyFiles)
 library(shinyjs)
 library(shinymanager)
 library(listviewer)
+library(rjson)
 
 
 
 load_dataset <- function(input_path){
-  read_csv(input_path) %>%
-    rename(Symbol=X1)
+  my_df <- read_csv(input_path) %>%
+    rename(Symbol=X1) %>% as.data.frame()
+  rownames(my_df) <- my_df$Symbol
+  my_df[,-1]
 }
 
 load_coldata <- function(input_path){
