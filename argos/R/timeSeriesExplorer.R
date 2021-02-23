@@ -111,6 +111,8 @@ timeSeriesExplorerServer <- function(id, dataset, geneList) {
     observeEvent(input$btn_add_to_selection, {
       req(geneList)
       req(input$select_gene_list)
+      shinyjs::disable("btn_add_to_selection")
+      print("timeSeriesExploreer:btn_add_to_selection")
       new_selected <- c(input$select_symbols,
                         unlist(geneList()[[input$select_gene_list]]))
       cat("new_selected: ", new_selected, "\n")
@@ -121,6 +123,7 @@ timeSeriesExplorerServer <- function(id, dataset, geneList) {
         selected = new_selected,
         server = TRUE
       )
+      shinyjs::enable("btn_add_to_selection")
     })
     
     ###################################

@@ -100,27 +100,19 @@ matrixExplorerServer <- function(id, dataset, geneList) {
       # req(input$select_symbols)
       req(geneList)
       req(input$select_gene_list)
-      print("geneList()")
-      print(unlist(geneList()[[input$select_gene_list]]))
-      
-      print("input$select_symbols:")
-      print(input$select_symbols)
+      shinyjs::disable("btn_add_to_selection")
+      print("matrixExplorer: btn_add_to_selection")
       
       new_selected <- c(input$select_symbols,
                         unlist(geneList()[[input$select_gene_list]]))
-      print("new_selected:")
-      print(new_selected)
-      cat("is.reactive(new_selected):",
-          is.reactive(new_selected),
-          "\n")
-      
       updateSelectizeInput(
         session,
         "select_symbols",
-        choices = dataset$geneUniverse(),
         selected = new_selected,
+        choices = dataset$geneUniverse(),
         server = TRUE
       )
+      shinyjs::enable("btn_add_to_selection")
     })
     
     ###################################
@@ -194,9 +186,9 @@ matrixExplorerServer <- function(id, dataset, geneList) {
       updateSelectizeInput(
         session,
         "select_symbols",
-        choices = dataset$geneUniverse(),
-        selected = character(0),
-        server = TRUE
+        # choices = dataset$geneUniverse(),
+        selected = character(0)
+        # server = TRUE
       )
       
       if (!isNormalized()) {
