@@ -13,6 +13,9 @@ Run R -e "install.packages('styler')"
 Run R -e "install.packages('reactR')"
 Run R -e "install.packages('listviewer')"
 Run R -e "install.packages('rjson')"
+Run R -e "install.packages('BiocManager')"
+Run R -e "BiocManager::install('scater')"
+Run R -e "install.packages('uwot')"
 
 # COPY main.R /home/rstudio/main.R
 # ENTRYPOINT ["Rscript", "/home/rstudio/main.R"]

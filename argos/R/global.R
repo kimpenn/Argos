@@ -7,13 +7,13 @@ library(shinymanager)
 library(reactR)
 library(listviewer)
 library(rjson)
+library(scater)
 
 
 
 load_dataset <- function(input_path){
-  my_df <- read_csv(input_path) %>%
-    rename(Symbol=X1) %>% as.data.frame()
-  rownames(my_df) <- my_df$Symbol
+  my_df <- as.data.frame(read_csv(input_path))
+  rownames(my_df) <- my_df$symbol
   my_df[,-1]
 }
 

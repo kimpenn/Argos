@@ -1,5 +1,5 @@
-ui <- dashboardPage(
-  dashboardHeader(title = "Argos"),
+ui <- dashboardPage(title= "Argos",
+  dashboardHeader(title = textOutput("projectTitle")),
   
   dashboardSidebar(
     sidebarMenu(

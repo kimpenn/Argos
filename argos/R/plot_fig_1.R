@@ -1,28 +1,3 @@
-# library(tidyverse)
-# library(shinydashboard)
-# library(DT)
-#
-#
-# load_dataset <- function(input_path) {
-#   read_csv(input_path) %>%
-#     rename(Symbol = X1)
-# }
-#
-# load_coldata <- function(input_path) {
-#   read_csv(input_path)
-# }
-# my_data <- load_dataset("argus-pathway/dataset/counts.csv")
-# my_data_norm <-
-#   load_dataset("argus-pathway/dataset/norm-counts.csv")
-# my_coldata <- load_coldata("argus-pathway/dataset/design_tbl.csv")
-# my_corner_stone <-
-#   read_csv("argus-pathway/dataset/corner_stone.csv", col_names = FALSE)[["X1"]]
-
-# is_outlier <- function(x) {
-#   return(x < quantile(x, 0.25) - 1.5 * IQR(x) |
-#            x > quantile(x, 0.75) + 1.5 * IQR(x))
-# }
-
 plot_fig_1 <-
   function(input_data,
            input_col_data,
@@ -36,13 +11,13 @@ plot_fig_1 <-
     the_data <- input_data
     percent_list <- list(c(), c(), c(), c(), c())
     names(percent_list) <-
-      c("group_c", "group_1", "group_2", "group_3", "group_7")
+      c("C", "1", "2", "3", "7")
     treatment_list <- input_col_data$Group
     
     # Generate Cell ID List -------------------
     cell_id_list <- list(c(), c(), c(), c(), c())
     names(cell_id_list) <-
-      c("group_c", "group_1", "group_2", "group_3", "group_7")
+      c("C", "1", "2", "3", "7")
     for (idx_i in seq_along(treatment_list)) {
       the_val <- colnames(the_data)[idx_i]
       cell_id_list[[treatment_list[idx_i]]] <-
@@ -52,33 +27,36 @@ plot_fig_1 <-
     for (idx_i in seq_along(treatment_list)) {
       the_val <-
         100 * the_data[input_target, idx_i] / sum(the_data[input_gene_list, idx_i])
+      
+      # Edge Case: No expression will be replaced as 0.
+      the_val[is.na(the_val)] <- 0
       percent_list[[treatment_list[idx_i]]] <-
         c(percent_list[[treatment_list[idx_i]]], the_val)
     }
     
     treat_col <- c(
-      rep("C", length(percent_list[["group_c"]])),
-      rep("1", length(percent_list[["group_1"]])),
-      rep("2", length(percent_list[["group_2"]])),
-      rep("3", length(percent_list[["group_3"]])),
-      rep("7", length(percent_list[["group_7"]]))
+      rep("C", length(percent_list[["C"]])),
+      rep("1", length(percent_list[["1"]])),
+      rep("2", length(percent_list[["2"]])),
+      rep("3", length(percent_list[["3"]])),
+      rep("7", length(percent_list[["7"]]))
     )
     
     treat_col <-
       factor(treat_col, levels = c("C", "1", "2", "3", "7"))
     
     
-    prec_col <- c(percent_list[["group_c"]],
-                  percent_list[["group_1"]],
-                  percent_list[["group_2"]],
-                  percent_list[["group_3"]],
-                  percent_list[["group_7"]])
+    prec_col <- c(percent_list[["C"]],
+                  percent_list[["1"]],
+                  percent_list[["2"]],
+                  percent_list[["3"]],
+                  percent_list[["7"]])
     
-    id_col <- c(cell_id_list[["group_c"]],
-                cell_id_list[["group_1"]],
-                cell_id_list[["group_2"]],
-                cell_id_list[["group_3"]],
-                cell_id_list[["group_7"]])
+    id_col <- c(cell_id_list[["C"]],
+                cell_id_list[["1"]],
+                cell_id_list[["2"]],
+                cell_id_list[["3"]],
+                cell_id_list[["7"]])
     
     plot_df <- tibble(
       treat = treat_col,
@@ -111,9 +89,43 @@ plot_fig_1 <-
     # saveRDS(res_list, "my_data.Rds")
     return(res_list)
   }
+
+#######################
+# Mock
+#######################
+# library(tidyverse)
+# library(shinydashboard)
+# library(DT)
+# 
+# 
+# load_dataset <- function(input_path){
+#   my_df <- as.data.frame(read_csv(input_path))
+#   rownames(my_df) <- my_df$symbol
+#   my_df[,-1]
+# }
+# 
+# load_coldata <- function(input_path){
+#   read_csv(input_path)
+# }
+# 
+# my_data_norm <- load_dataset("dataset/ngf2/count-matrix-norm.csv")
+# my_coldata <- load_coldata("dataset/ngf2/design-table.csv")
+# my_corner_stone <- c("Creb1",
+#                      "Hras",
+#                      "Map2k6",
+#                      "Ntrk1",
+#                      "Sh2b1",
+#                      "Src")
+# 
+# is_outlier <- function(x) {
+#   return(x < quantile(x, 0.25) - 1.5 * IQR(x) |
+#            x > quantile(x, 0.75) + 1.5 * IQR(x))
+# }
+# 
 # input_data <- my_data_norm
 # input_col_data <- my_coldata
 # input_target <- "Creb1"
 # input_gene_list <- my_corner_stone
-
+# 
 # plot_fig_1(my_data_norm, my_coldata, "Creb1", my_corner_stone)
+# NGF2.2.4

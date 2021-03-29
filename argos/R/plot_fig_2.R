@@ -25,15 +25,16 @@
 # input_gene_list <- my_corner_stone
 
 get_treat_idx <- function(input_str) {
-  if (input_str == "group_1")
+  if (input_str == "1")
     return(1)
-  if (input_str == "group_2")
+  if (input_str == "2")
     return(2)
-  if (input_str == "group_3")
+  if (input_str == "3")
     return(3)
-  if (input_str == "group_7")
+  if (input_str == "7")
     return(4)
 }
+
 addSmallLegend <-
   function(myPlot,
            pointSize = 2,
@@ -68,7 +69,7 @@ plot_fig_2 <-
     ann_list_gene_list_reads <- list(c(), c(), c(), c())
     ann_list_cell_reads <- list(c(), c(), c(), c())
     for (idx in seq_along(treatment_list)) {
-      if (treatment_list[idx] != "group_c") {
+      if (treatment_list[idx] != "C") {
         treat_idx <- get_treat_idx(treatment_list[idx])
         
         the_val <- sum(the_data[, idx])
