@@ -1,3 +1,5 @@
+# Module for Gene Selection in Time Series Explorer (tse) Component 
+
 tseGeneSelectUI <- function(id) {
   ns <- NS(id)
   wellPanel(fluidRow(

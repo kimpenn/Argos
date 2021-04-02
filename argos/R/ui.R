@@ -1,3 +1,5 @@
+# Argos' Main UI
+
 ui <- dashboardPage(
   title = "Argos",
   dashboardHeader(title = textOutput("projectTitle"),
@@ -25,5 +27,7 @@ ui <- dashboardPage(
     )
   )
 )
+
+# Security  ----------------
 
 ui <- secure_app(ui)

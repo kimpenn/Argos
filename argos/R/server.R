@@ -1,12 +1,14 @@
+# Argos' Main Server
+
 server <- function(input, output, session) {
-  ####################################
-  # Security
-  ####################################
+
+  # Security  ----------------
+  
   res_auth <- secure_server(check_credentials = check_credentials(credentials))
   
-  ####################################
-  # Server: Data Loader
-  ####################################
+
+  # Data Loader ----------------
+  
   globals <- reactiveValues(the_table = NULL, ori_data = NULL)
   argosDataSet <- dataLoaderSever("dataLoader")
   
@@ -16,6 +18,7 @@ server <- function(input, output, session) {
   })
   
   # For debug -----
+  # 
   # observe({
   #   req(argosDataSet)
   #   req(argosDataSet$colData)
@@ -23,21 +26,20 @@ server <- function(input, output, session) {
   # is.reactive(argosDataSet) FALSE
   # is.reactive(argosDataSet$geneUniverse) TRUE
   
-  ####################################
-  # Server: Gene List Manager
-  ####################################
+
+  # Gene List Manager -----------------
+
   argosGeneList <- geneListManagerServer("geneListManager",
                                          argosDataSet)
   
-  ####################################
-  # Server: Tab 1 Data Exploration
-  ####################################
+
+  # Tab 1: Data Exploration  ----------------
+
   matrixExplorerServer("matrixExplorer",
                        argosDataSet, argosGeneList)
   
-  # ####################################
-  # # Server: Tab 2 Time Series Inspection
-  # ####################################
+
+  # Tab 2 Time Series Inspection  ----------------
   timeSeriesExplorerServer("timeSeriesExplorer",
                            argosDataSet, argosGeneList)
   

@@ -1,3 +1,5 @@
+# Module for Displaying Cell Images
+
 cellImageUI <- function(id) {
   ns <- NS(id)
   fluidRow(

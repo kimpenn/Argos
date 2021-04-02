@@ -1,3 +1,5 @@
+# Module for the first tab in Time Series Explorer (tse) Component 
+
 tseTab1UI <- function(id) {
   ns <- NS(id)
   

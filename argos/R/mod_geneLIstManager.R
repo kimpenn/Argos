@@ -1,4 +1,4 @@
-# Helper function ----------------
+# Module for the Gene List Manager (GLM) Component 
 
 # UI function ----------------
 # Upload CSV file as gene list dataframe

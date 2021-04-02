@@ -1,4 +1,4 @@
-# Helper function ----------------
+# Module for Data Loader (dl) Component 
 
 # UI function ----------------
 
@@ -133,9 +133,8 @@ dataLoaderSever <- function(id) {
       
     })
     
-    ###############################
-    # Design Table
-    ###############################
+
+    # Design Table  ------------------
     observe({
       req(dataset$colData)
       req(dataset$colData())

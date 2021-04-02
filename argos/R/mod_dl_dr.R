@@ -1,3 +1,5 @@
+# Module for Dimension Reduction (dr) in Data Loader (dl) Component 
+
 dlDimensionReductionUI <- function(id) {
   ns <- NS(id)
   fluidPage(wellPanel(fluidRow(

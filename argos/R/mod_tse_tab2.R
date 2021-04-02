@@ -1,4 +1,4 @@
-# The module of the first tab in time series explorer (tse)
+# Module for the second tab in Time Series Explorer (tse) Component 
 
 # UI function ------------------------------------------------
 

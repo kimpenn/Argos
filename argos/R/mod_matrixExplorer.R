@@ -1,3 +1,5 @@
+# Module for  Matrix Explorer (me) Component 
+
 # UI function ----------------
 matrixExplorerUI <- function(id) {
   ns <- NS(id)
