@@ -9,3 +9,5 @@ services:
       - PASSWORD=chad
     volumes: 
       - .:/home/rstudio
+    environment:
+      - "DISABLE_AUTH=true"

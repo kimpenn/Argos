@@ -5,8 +5,8 @@ account: kuangda
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 3682885
-bundleId: 4262998
+bundleId: 4424441
 url: https://kuangda.shinyapps.io/argos/
-when: 1614108430.3444
+when: 1617375741.7558
 asMultiple: FALSE
 asStatic: FALSE

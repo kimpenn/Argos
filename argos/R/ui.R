@@ -1,7 +1,10 @@
-ui <- dashboardPage(title= "Argos",
-  dashboardHeader(title = textOutput("projectTitle")),
+ui <- dashboardPage(
+  title = "Argos",
+  dashboardHeader(title = textOutput("projectTitle"),
+                  titleWidth = 180),
   
   dashboardSidebar(
+    width = 180,
     sidebarMenu(
       id = "tab",
       menuItem("Data Loader", tabName = "data_upload"),
@@ -12,6 +15,7 @@ ui <- dashboardPage(title= "Argos",
   ),
   
   dashboardBody(
+    tags$head(tags$link(rel = "shortcut icon", href = "favicon.ico")),
     useShinyjs(),
     tabItems(
       dataLoaderUI("dataLoader"),

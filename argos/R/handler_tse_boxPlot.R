@@ -1,11 +1,16 @@
-plot_fig_1 <-
+is_outlier <- function(x) {
+  return(
+    x < (quantile(x, 0.25) - 1.5 * IQR(x)) |
+      x > (quantile(x, 0.75) + 1.5 * IQR(x))
+  )
+}
+
+tse_box_plot <-
   function(input_data,
            input_col_data,
            input_target,
            input_gene_list) {
-    cat("input_target:", input_target, "\n")
-    cat("input_gene_list:", input_gene_list, "\n")
-    
+
     # the_data <- as.data.frame(input_data[-1])
     # row.names(the_data) <- input_data$Symbol
     the_data <- input_data

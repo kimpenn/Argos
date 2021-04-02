@@ -16,6 +16,7 @@ Run R -e "install.packages('rjson')"
 Run R -e "install.packages('BiocManager')"
 Run R -e "BiocManager::install('scater')"
 Run R -e "install.packages('uwot')"
+Run R -e "BiocManager::install('DESeq2')"
 
 # COPY main.R /home/rstudio/main.R
 # ENTRYPOINT ["Rscript", "/home/rstudio/main.R"]

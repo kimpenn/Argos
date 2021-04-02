@@ -8,7 +8,7 @@ dataLoaderUI <- function(id) {
           
           tabsetPanel(
             tabPanel(
-              "Upload Dataset",
+              "Upload dataset",
               fluidPage(
                 fluidRow(wellPanel(
                   shinyFiles::shinyDirButton(
@@ -35,8 +35,10 @@ dataLoaderUI <- function(id) {
                 ))))
               )
             ),
-            tabPanel("Design Table", DTOutput(ns('designTable'))),
-            tabPanel("Dimension Reduction", uiDimensionReduction(ns))
+            tabPanel("Design Table", 
+                     DTOutput(ns('designTable'))),
+            tabPanel("Dimension Reduction", 
+                     dlDimensionReductionUI(ns("dimensionReduction")))
           ))
 }
 
@@ -47,7 +49,7 @@ dataLoaderSever <- function(id) {
     ###############################
     # Define Output
     ###############################
-    dataSet <- reactiveValues(
+    dataset <- reactiveValues(
       rawData = NULL,
       normData = NULL,
       colData = NULL,
@@ -56,7 +58,7 @@ dataLoaderSever <- function(id) {
     )
     
     ###############################
-    # Select Dataset Folder
+    # Select dataset Folder
     ###############################
     roots <- c(wd = '.')
     
@@ -71,11 +73,11 @@ dataLoaderSever <- function(id) {
     
     observe({
       if (length(input$folder) <= 1) {
-        dataSet$title <- reactive({
+        dataset$title <- reactive({
           "Argos"
         })
       } else{
-        dataSet$title <-
+        dataset$title <-
           reactive({
             paste0("Argos-", input$folder[["path"]][[3]])
           })
@@ -97,7 +99,7 @@ dataLoaderSever <- function(id) {
       req(length(input$folder) > 1)
       print("Updating file path log...")
       output$dataset_path_log <- renderText({
-        paste0("Selected Path of the Dataset:\n",
+        paste0("Selected Path of the dataset:\n",
                datasetPath())
       })
     })
@@ -107,22 +109,22 @@ dataLoaderSever <- function(id) {
       print("Loading rawData...")
       str <- ""
       str <- paste0(str, "Loding count matrix...\n")
-      dataSet$rawData <-
+      dataset$rawData <-
         reactive(load_dataset(file.path(datasetPath(), "count-matrix.csv")))
       
       str <- paste0(str, "Loding Normalized count matrix...\n")
-      dataSet$normData <-
+      dataset$normData <-
         reactive(load_dataset(file.path(
           datasetPath(), "count-matrix-norm.csv"
         )))
       
       str <- paste0(str, "Loding Column Data...\n")
-      dataSet$colData <-
+      dataset$colData <-
         reactive(load_coldata(file.path(datasetPath(), "design-table.csv")))
       
       str <-
         paste0(str, "Extracting Gene Symbols from the Data...\n")
-      dataSet$geneUniverse <- reactive(rownames(dataSet$rawData()))
+      dataset$geneUniverse <- reactive(rownames(dataset$rawData()))
       
       str <- paste0(str, "Done!\n")
       output$upload_log <- renderText({
@@ -135,36 +137,25 @@ dataLoaderSever <- function(id) {
     # Design Table
     ###############################
     observe({
-      req(dataSet$colData)
-      req(dataSet$colData())
+      req(dataset$colData)
+      req(dataset$colData())
       
       output$designTable <- renderDT(
-        dataSet$colData() %>% dplyr::count(Group)
+        dataset$colData() %>% dplyr::count(Group)
       )
     })
     
-    ###############################
-    # Dimension Reduction
-    ###############################
-    observe({
-      req(dataSet$colData)
-      req(dataSet$rawData)
-      if (input$select_dr == "PCA") {
-        output$DRplot <- renderPlot({
-          pca_plot(dataSet$rawData(), dataSet$colData())
-        })
-      } else if (input$select_dr == "UMAP") {
-        output$DRplot <- renderPlot({
-          umap_plot(dataSet$rawData(), dataSet$colData())
-        })
-      }
-      
-      
-    })
     
+    # Dimension Reduction ------------------
+    observe({
+      req(dataset)
+      req(dataset$colData)
+      req(dataset$colData())
+      dlDimensionReductionServer("dimensionReduction", dataset)
+    })
     ###############################
     # Output
     ###############################
-    dataSet
+    dataset
   })
 }

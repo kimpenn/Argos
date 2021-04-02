@@ -7,9 +7,10 @@ library(shinymanager)
 library(reactR)
 library(listviewer)
 library(rjson)
+library(uwot)
 library(scater)
 
-
+options(repos = BiocManager::repositories())
 
 load_dataset <- function(input_path){
   my_df <- as.data.frame(read_csv(input_path))

@@ -15,6 +15,11 @@ server <- function(input, output, session) {
     output$projectTitle <- renderText({argosDataSet$title()})
   })
   
+  # For debug -----
+  # observe({
+  #   req(argosDataSet)
+  #   req(argosDataSet$colData)
+  # })
   # is.reactive(argosDataSet) FALSE
   # is.reactive(argosDataSet$geneUniverse) TRUE
   
