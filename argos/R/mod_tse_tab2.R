@@ -1,4 +1,4 @@
-# Module for the second tab in Time Series Explorer (tse) Component 
+# Module for the second tab in Time Series Explorer (tse) Component
 
 # UI function ------------------------------------------------
 
@@ -25,52 +25,61 @@ tseTab2UI <- function(id) {
     fluidRow(overviewTableBox(ns("group3")),
              overviewTableBox(ns("group7")))
   )
-  
 }
 
 # Server function ---------------------------------------------
 
-tseTab2Server <- function(id, theMatrix, dataset, SelectedRVs) {
+tseTab2Server <- function(id, DatasetRVs, SelectedRVs) {
   moduleServer(id, function(input, output, session) {
     # Visualization: Line Chart ------------------------------------
     output$plot2 <- renderPlot({
-      req(dataset)
-      req(dataset$colData)
-      req(SelectedRVs)
-      req(SelectedRVs$target())
-      req(SelectedRVs$geneList())
+      req(DatasetRVs$normData)
+      req(DatasetRVs$colData)
+      req(SelectedRVs$target)
+      req(SelectedRVs$geneList)
       
       tse_line_chart(
-        theMatrix(),
-        dataset$colData(),
-        SelectedRVs$target(),
-        SelectedRVs$geneList()
+        DatasetRVs$normData,
+        DatasetRVs$colData,
+        SelectedRVs$target,
+        SelectedRVs$geneList
       )
     })
     
     # Render Data Table------------------------------------
-    observe({
-      req(dataset)
-      req(dataset$colData)
-      req(SelectedRVs)
-      req(SelectedRVs$target)
-      req(SelectedRVs$target())
-      req(SelectedRVs$geneList)
-      req(SelectedRVs$geneList())
-      
-      tibleListRV <- tse_overview_table(
-        theMatrix(),
-        dataset$colData(),
-        SelectedRVs$target(),
-        SelectedRVs$geneList()
+    
+    tibleListRV <-
+      eventReactive(
+        c(
+          DatasetRVs$normData,
+          DatasetRVs$colData,
+          SelectedRVs$target,
+          SelectedRVs$geneList
+        ),
+        {
+          req(DatasetRVs$normData)
+          req(DatasetRVs$colData)
+          req(SelectedRVs$target)
+          req(SelectedRVs$geneList)
+          
+          tse_overview_table(
+            DatasetRVs$normData,
+            DatasetRVs$colData,
+            SelectedRVs$target,
+            SelectedRVs$geneList
+          )
+        }
       )
-      
-      output$groupC = render_table_handler(tibleListRV()[[1]])
-      output$group1 = render_table_handler(tibleListRV()[[2]])
-      output$group2 = render_table_handler(tibleListRV()[[3]])
-      output$group3 = render_table_handler(tibleListRV()[[4]])
-      output$group7 = render_table_handler(tibleListRV()[[5]])
+    
+    observeEvent(tibleListRV(), {
+      output$groupC = renderTableHandler(tibleListRV()[[1]])
+      output$group1 = renderTableHandler(tibleListRV()[[2]])
+      output$group2 = renderTableHandler(tibleListRV()[[3]])
+      output$group3 = renderTableHandler(tibleListRV()[[4]])
+      output$group7 = renderTableHandler(tibleListRV()[[5]])
     })
+    
+    
   })
   
   

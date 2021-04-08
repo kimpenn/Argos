@@ -1,4 +1,6 @@
-# Module for the first tab in Time Series Explorer (tse) Component 
+# Module for the first tab in Time Series Explorer (tse) Component
+
+# UI function ------------------------------------------------
 
 tseTab1UI <- function(id) {
   ns <- NS(id)
@@ -17,44 +19,42 @@ tseTab1UI <- function(id) {
   )
 }
 
+# Server function ---------------------------------------------
 
-tseTab1Server <- function(id, theMatrix, dataset, SelectedRVs) {
+tseTab1Server <- function(id, DatasetRVs, SelectedRVs) {
   moduleServer(id, function(input, output, session) {
     theOutliers <- reactiveVal()
     theFig <- reactiveVal()
+    
     # Visualization: Box Plot   ------------------------------------
+    
     observe({
-      req(dataset)
-      req(dataset$colData)
-      req(theMatrix)
-      req(SelectedRVs)
+      req(DatasetRVs$normData)
+      req(DatasetRVs$colData)
       req(SelectedRVs$target)
       req(SelectedRVs$geneList)
-      req(SelectedRVs$target())
-      req(SelectedRVs$geneList())
-      print("Drawing Box Plot!")
+      
       res <-
         tse_box_plot(
-          theMatrix(),
-          dataset$colData(),
-          SelectedRVs$target(),
-          SelectedRVs$geneList()
+          DatasetRVs$normData,
+          DatasetRVs$colData,
+          SelectedRVs$target,
+          SelectedRVs$geneList
         )
+      
       theOutliers(res[[2]])
       theFig(res[[1]])
     })
     
-    observe({
-      req(theFig)
-      req(SelectedRVs)
-      req(SelectedRVs$target)
-      output$plot1 <- renderPlot({
-        theFig()
-      })
+    output$plot1 <- renderPlot({
+      req(theFig())
+      
+      theFig()
     })
     
+    # Visualization: Cell Images  ------------------------------------
     
-    cellImageServer("cellImage", dataset, theOutliers)
+    cellImageServer("cellImage", DatasetRVs, theOutliers)
     
   })
 }

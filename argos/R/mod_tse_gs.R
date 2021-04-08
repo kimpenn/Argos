@@ -1,5 +1,7 @@
 # Module for Gene Selection in Time Series Explorer (tse) Component 
 
+# UI function ------------------------------------------------
+
 tseGeneSelectUI <- function(id) {
   ns <- NS(id)
   wellPanel(fluidRow(
@@ -34,72 +36,80 @@ tseGeneSelectUI <- function(id) {
   ))
 }
 
+# Server function ---------------------------------------------
 
-tseGeneSelectServer <- function(id, dataset, geneList) {
+tseGeneSelectServer <- function(id, DatasetRVs, GeneListRV) {
   moduleServer(
     id,
     function(input, output, session) {
       # Define Output ------------------
+      
       SelectedRVs <- reactiveValues(
         geneList = NULL,
         target = NULL
       )
       
-      # Select Genes ------------------
+      # Select CornerStone Genes ------------------
+      
       observe({
-        req(dataset)
-        req(dataset$rawData)
+        req(DatasetRVs$geneUniverse)
         
         updateSelectizeInput(
           session,
           "select_symbols",
-          choices = dataset$geneUniverse(),
+          choices = DatasetRVs$geneUniverse,
           server = TRUE
         )
       })
+      
       # Select Pre-defined Genes List ------------------
+      
       observe({
-        req(geneList)
+        req(GeneListRV())
         updateSelectInput(session,
                           "select_gene_list",
-                          choices = names(geneList()))
+                          choices = names(GeneListRV()))
       })
-      # Select the Target Gene
+      
+      # Select the Target Gene ------------------
+      
       observeEvent(input$select_symbols, {
-        req(input$select_symbols)
+
         updateSelectInput(session, "select_target",
                           choices = input$select_symbols)
       })
       
       # Load Pre-defined Genes  ------------------
+      
       observeEvent(input$btn_add_to_selection, {
-        req(geneList)
+        req(GeneListRV())
         req(input$select_gene_list)
+        
         shinyjs::disable("btn_add_to_selection")
-        
+
         new_selected <- c(input$select_symbols,
-                          unlist(geneList()[[input$select_gene_list]]))
-        
+                          unlist(GeneListRV()[[input$select_gene_list]]))
+
         updateSelectizeInput(
           session,
           "select_symbols",
-          choices = dataset$geneUniverse(),
+          choices = DatasetRVs$geneUniverse,
           selected = new_selected,
           server = TRUE
         )
-        
+
         shinyjs::enable("btn_add_to_selection")
       })
       
       # Tiger Analysis   ------------------
+      
       observe({
-        req(input$select_gene_list)
-        req(input$select_target)
-        SelectedRVs$geneList <- reactive(input$select_symbols)
-        SelectedRVs$target <- reactive(input$select_target)
+        SelectedRVs$geneList <- input$select_symbols
+        SelectedRVs$target <- input$select_target
       })
       
       # Output  ------------------
+      
       SelectedRVs
     }
   )

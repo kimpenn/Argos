@@ -1,5 +1,7 @@
 # Module for Displaying Cell Images
 
+# UI function ------------------------------------------------
+
 cellImageUI <- function(id) {
   ns <- NS(id)
   fluidRow(
@@ -27,8 +29,6 @@ cellImageUI <- function(id) {
           "outlier_img_after"
         )))
       )
-      
-      
     ),
     
     # Column 2: All Images    ----------------
@@ -67,22 +67,22 @@ cellImageUI <- function(id) {
   )
 }
 
-cellImageServer <- function(id, dataset, theOutliers) {
+# Server function ---------------------------------------------
+
+cellImageServer <- function(id, DatasetRVs, theOutliers) {
   moduleServer(id, function(input, output, session) {
     # Cell Images: Outliers ------------------------------------
     
     # Update selections
     observe({
-      req(theOutliers)
+      req(theOutliers())
+      
       updateSelectInput(session, "select_outliers",
                         choices = theOutliers())
     })
     
     # Render Cell Images
     observeEvent(input$select_outliers, {
-      req(theOutliers)
-      req(input$select_outliers)
-      
       file_name_list <- get_image_path(input$select_outliers)
       
       output$outlier_img_before <- renderImage({
@@ -101,19 +101,18 @@ cellImageServer <- function(id, dataset, theOutliers) {
     # Update selections
     observe({
       req(input$select_cell_image_group)
-      req(dataset$colData)
+      req(DatasetRVs$colData)
+      
       updateSelectInput(
         session,
         "select_cell_image_id",
         choices = get_sample_list(input$select_cell_image_group,
-                                  dataset$colData())
+                                  DatasetRVs$colData)
       )
     })
     
     # Render Cell Images
     observeEvent(input$select_cell_image_id, {
-      req(input$select_cell_image_id)
-      
       file_name_list <- get_image_path(input$select_cell_image_id)
       
       output$any_img_before <- renderImage({

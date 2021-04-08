@@ -1,9 +1,6 @@
-# Module for the Gene List Manager (GLM) Component 
+# Module for the Gene List Manager (GLM) Component
 
 # UI function ----------------
-# Upload CSV file as gene list dataframe
-# Customize gene list
-# Download current geen list dataframe
 
 geneListManagerUI <- function(id) {
   ns <- NS(id)
@@ -69,57 +66,43 @@ geneListManagerUI <- function(id) {
 }
 
 # Server function ----------------
-# Return: geneListDataframe
+
 geneListManagerServer <- function(id, dataset) {
-  # stopifnot(is.reactive(dataset))
-  
   moduleServer(id, function(input, output, session) {
     geneList <- reactiveVal(list())
-    #####################################
-    # Upload Gene List CSV File
-    #####################################
-    # observeEvent(input$user_gene_list_csv, {
-    observe({
-      req(input$user_gene_list_csv)
-      geneList(fromJSON(
-        file = input$user_gene_list_csv$datapath,
-        simplify = FALSE
-      ))
-    })
     
-    #####################################
-    # Add New Gene List
-    #####################################
+    # Upload Gene List CSV File ----------------
+    
+    observeEvent(input$user_gene_list_csv, {
+      geneList(fromJSON(file = input$user_gene_list_csv$datapath,
+               simplify = FALSE))
+    }, ignoreInit = TRUE)
+    
+    # Add New Gene List ----------------
+    
     observeEvent(input$btn_add_gene_list, {
       req(input$new_gene_list_name)
       req(input$new_gene_list)
-      req(geneList)
+      req(geneList())
       the_list <- geneList()
       the_list[[input$new_gene_list_name]] <-
         as.list(input$new_gene_list)
+      
       geneList(the_list)
-    })
-    
-    # observe({
-    #   cat("is.reactive(dataset)", is.reactive(dataset), "\n")
-    #   cat("is.reactive(dataset$geneUniverse)",
-    #       is.reactive(dataset$geneUniverse),
-    #       "\n")
-    # })
+    }, ignoreInit = TRUE)
     
     observe({
       req(dataset$geneUniverse)
       updateSelectizeInput(
         session,
         "new_gene_list",
-        choices = dataset$geneUniverse(),
+        choices = dataset$geneUniverse,
         server = TRUE
       )
     })
-    
-    #####################################
-    # Remove New Gene List
-    #####################################
+
+    # Remove New Gene List ----------------
+
     observeEvent(geneList(), {
       req(geneList)
       updateSelectizeInput(
@@ -130,6 +113,7 @@ geneListManagerServer <- function(id, dataset) {
         server = TRUE
       )
     })
+    
     observeEvent(input$btn_remove_gene_list, {
       req(input$remove_gene_list)
       the_list <- geneList()
@@ -137,9 +121,8 @@ geneListManagerServer <- function(id, dataset) {
       geneList(the_list)
     })
     
-    #####################################
-    # Download the a JSON file
-    #####################################
+    # Download the a JSON file ----------------
+
     output$btn_download_gene_list <- downloadHandler(
       filename = function() {
         paste("geneList", ".json", sep = "")
@@ -152,11 +135,10 @@ geneListManagerServer <- function(id, dataset) {
       }
     )
     
-    #####################################
-    # Render a JSON VIEWER
-    #####################################
+    # Render a JSON VIEWER ----------------
+    
     output$rjed <- renderReactjson({
-      req(geneList)
+      req(geneList())
       reactjson(
         geneList(),
         name = "GeneListSets",
@@ -168,13 +150,8 @@ geneListManagerServer <- function(id, dataset) {
       )
     })
     
-    observeEvent(input$rjed_edit, {
-      str(input$rjed_edit, max.level = 2)
-    })
-    
-    #####################################
-    # return
-    #####################################
+    # return ----------------
+
     geneList
   })
 }
