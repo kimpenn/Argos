@@ -1,3 +1,18 @@
+# Select Good Samples -------------------------------
+
+preprocess_rawdata <- function(raw_matrix, design_table, select_flg) {
+  res_list = list("rawData" = raw_matrix, "colData" = design_table)
+  
+  if (select_flg) {
+    res_list$colData <-
+      design_table %>% filter((Group == "C" & Annotation == "N") |
+                                Group %in% c("1", "2", "3", "7") &
+                                Annotation == "Y")
+    col_idx <- res_list$colData$Sample
+    res_list$rawData <- res_list$rawData[, col_idx]
+  }
+  res_list
+}
 
 # PCA analysis -------------------------------
 

@@ -31,7 +31,11 @@ tseGeneSelectUI <- function(id) {
       
       actionButton(ns("btn_add_to_selection"),
                    "Add to Selection",
-                   class = "btn-secondary")
+                   class = "btn-secondary"),
+      
+      checkboxInput(ns("cb_good_samples"), "Good Samples Only", 
+                    value = FALSE, width = NULL)
+      
     )
   ))
 }
@@ -46,7 +50,8 @@ tseGeneSelectServer <- function(id, DatasetRVs, GeneListRV) {
       
       SelectedRVs <- reactiveValues(
         geneList = NULL,
-        target = NULL
+        target = NULL,
+        goodSamplesOnly = FALSE
       )
       
       # Select CornerStone Genes ------------------
@@ -69,6 +74,12 @@ tseGeneSelectServer <- function(id, DatasetRVs, GeneListRV) {
         updateSelectInput(session,
                           "select_gene_list",
                           choices = names(GeneListRV()))
+      })
+      
+      # Select Samples ------------------
+      
+      observeEvent(input$cb_good_samples, {
+        SelectedRVs$goodSamplesOnly <- input$cb_good_samples
       })
       
       # Select the Target Gene ------------------

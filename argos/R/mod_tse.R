@@ -24,15 +24,15 @@ timeSeriesExplorerServer <- function(id, DatasetRVs, GeneListRV) {
   moduleServer(id, function(input, output, session) {
     # Module: Build Gene List ------------------------------------
     
-    CornerStoneGeneListRV <-
+    SelectionRVs <-
       tseGeneSelectServer("geneSelect", DatasetRVs, GeneListRV)
     
     # Module: Tab with Box Plot  ------------------------------------
     
-    tseTab1Server("tab1", DatasetRVs, CornerStoneGeneListRV)
+    tseTab1Server("tab1", DatasetRVs, SelectionRVs)
     
     # Module: Tab with Line Chart  ------------------------------------
     
-    tseTab2Server("tab2", DatasetRVs, CornerStoneGeneListRV)
+    tseTab2Server("tab2", DatasetRVs, SelectionRVs)
   })
 }

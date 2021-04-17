@@ -13,6 +13,12 @@ dlDimensionReductionUI <- function(id) {
         "Select the Dimension Reduction Method",
         choices = c("PCA", "UMAP"),
         multiple = FALSE
+      ),
+      checkboxInput(
+        ns("cb_good_samples"),
+        "Good Samples Only",
+        value = FALSE,
+        width = NULL
       )
     ),
     column(width = 6,
@@ -35,17 +41,35 @@ dlDimensionReductionServer <- function(id, dataset) {
     thePoltRV <- reactiveVal()
     thePlotDataRV <- reactiveVal()
     
-    observe({
+    SelectedDatasetRVs <- reactiveValues(
+      rawData = NULL,
+      colData = NULL
+    )
+    
+    observeEvent(input$cb_good_samples, {
+      req(dataset$normData)
       req(dataset$colData)
-      req(dataset$rawData)
+      
+      the_dataset <- preprocess_rawdata(dataset$rawData,
+                                        dataset$colData,
+                                     input$cb_good_samples)
+      
+      SelectedDatasetRVs$rawData <- the_dataset$rawData
+      SelectedDatasetRVs$colData <- the_dataset$colData
+    })
+    
+    
+    observe({
+      req(SelectedDatasetRVs$colData)
+      req(SelectedDatasetRVs$rawData)
       
       if (input$select_dr == "PCA") {
-        res <- pca_plot(dataset$rawData, dataset$colData)
+        res <- pca_plot(SelectedDatasetRVs$rawData, SelectedDatasetRVs$colData)
         thePoltRV(res$plot)
         thePlotDataRV(res$data)
         
       } else if (input$select_dr == "UMAP") {
-        res <- umap_plot(dataset$rawData, dataset$colData)
+        res <- umap_plot(SelectedDatasetRVs$rawData, SelectedDatasetRVs$colData)
         thePoltRV(res$plot)
         thePlotDataRV(res$data)
       }

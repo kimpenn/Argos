@@ -31,16 +31,34 @@ tseTab2UI <- function(id) {
 
 tseTab2Server <- function(id, DatasetRVs, SelectedRVs) {
   moduleServer(id, function(input, output, session) {
-    # Visualization: Line Chart ------------------------------------
-    output$plot2 <- renderPlot({
+    
+    SelectedDatasetRVs <- reactiveValues(
+      normData = NULL,
+      colData = NULL
+    )
+    
+    observeEvent(SelectedRVs$goodSamplesOnly, {
       req(DatasetRVs$normData)
       req(DatasetRVs$colData)
+      
+      the_dataset <- preprocess_data(DatasetRVs$normData,
+                                     DatasetRVs$colData,
+                                     SelectedRVs$goodSamplesOnly)
+      
+      SelectedDatasetRVs$normData <- the_dataset$normData
+      SelectedDatasetRVs$colData <- the_dataset$colData
+    })
+    
+    # Visualization: Line Chart ------------------------------------
+    output$plot2 <- renderPlot({
+      req(SelectedDatasetRVs$normData)
+      req(SelectedDatasetRVs$colData)
       req(SelectedRVs$target)
       req(SelectedRVs$geneList)
       
       tse_line_chart(
-        DatasetRVs$normData,
-        DatasetRVs$colData,
+        SelectedDatasetRVs$normData,
+        SelectedDatasetRVs$colData,
         SelectedRVs$target,
         SelectedRVs$geneList
       )
@@ -51,20 +69,20 @@ tseTab2Server <- function(id, DatasetRVs, SelectedRVs) {
     tibleListRV <-
       eventReactive(
         c(
-          DatasetRVs$normData,
-          DatasetRVs$colData,
+          SelectedDatasetRVs$normData,
+          SelectedDatasetRVs$colData,
           SelectedRVs$target,
           SelectedRVs$geneList
         ),
         {
-          req(DatasetRVs$normData)
-          req(DatasetRVs$colData)
+          req(SelectedDatasetRVs$normData)
+          req(SelectedDatasetRVs$colData)
           req(SelectedRVs$target)
           req(SelectedRVs$geneList)
           
           tse_overview_table(
-            DatasetRVs$normData,
-            DatasetRVs$colData,
+            SelectedDatasetRVs$normData,
+            SelectedDatasetRVs$colData,
             SelectedRVs$target,
             SelectedRVs$geneList
           )

@@ -26,18 +26,35 @@ tseTab1Server <- function(id, DatasetRVs, SelectedRVs) {
     theOutliers <- reactiveVal()
     theFig <- reactiveVal()
     
+    SelectedDatasetRVs <- reactiveValues(
+      normData = NULL,
+      colData = NULL
+    )
+    
+    observeEvent(SelectedRVs$goodSamplesOnly, {
+      req(DatasetRVs$normData)
+      req(DatasetRVs$colData)
+      
+      the_dataset <- preprocess_data(DatasetRVs$normData,
+                                     DatasetRVs$colData,
+                                     SelectedRVs$goodSamplesOnly)
+      
+      SelectedDatasetRVs$normData <- the_dataset$normData
+      SelectedDatasetRVs$colData <- the_dataset$colData
+    })
+    
     # Visualization: Box Plot   ------------------------------------
     
     observe({
-      req(DatasetRVs$normData)
-      req(DatasetRVs$colData)
+      req(SelectedDatasetRVs$normData)
+      req(SelectedDatasetRVs$colData)
       req(SelectedRVs$target)
       req(SelectedRVs$geneList)
       
       res <-
         tse_box_plot(
-          DatasetRVs$normData,
-          DatasetRVs$colData,
+          SelectedDatasetRVs$normData,
+          SelectedDatasetRVs$colData,
           SelectedRVs$target,
           SelectedRVs$geneList
         )
