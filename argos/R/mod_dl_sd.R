@@ -5,15 +5,15 @@
 dlSelectDatasetUI <- function(id) {
   ns <- NS(id)
   fluidPage(
-    fluidRow(wellPanel(
-      shinyFiles::shinyDirButton(
-        ns("folder"),
-        "Select a folder",
-        "Please select a folder",
-        FALSE,
-        class = "btn-success"
-      )
-    )),
+    # fluidRow(wellPanel(
+    #   shinyFiles::shinyDirButton(
+    #     ns("folder"),
+    #     "Select a folder",
+    #     "Please select a folder",
+    #     FALSE,
+    #     class = "btn-success"
+    #   )
+    # )),
     
     fluidRow(wellPanel(verbatimTextOutput(
       ns("dataset_path_log")
@@ -54,9 +54,11 @@ dlSelectDatasetServer <- function(id) {
                    roots = roots,
                    filetypes = c("", "txt"))
     
-    datasetPath <- eventReactive(input$folder, {
-      parseDirPath(roots, input$folder)
-    })
+    datasetPath <- reactiveVal("./dataset/ngf-all-qc")
+      
+    #   eventReactive(input$folder, {
+    #   parseDirPath(roots, input$folder)
+    # })
     
     observeEvent(datasetPath(), {
       the_name <- str_split(datasetPath(),

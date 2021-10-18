@@ -13,13 +13,14 @@ dlDimensionReductionUI <- function(id) {
         "Select the Dimension Reduction Method",
         choices = c("PCA", "UMAP"),
         multiple = FALSE
-      ),
-      checkboxInput(
-        ns("cb_good_samples"),
-        "Good Samples Only",
-        value = FALSE,
-        width = NULL
       )
+      # ,
+      # checkboxInput(
+      #   ns("cb_good_samples"),
+      #   "Good Samples Only",
+      #   value = FALSE,
+      #   width = NULL
+      # )
     ),
     column(width = 6,
            h4("Points near click"),
@@ -41,18 +42,16 @@ dlDimensionReductionServer <- function(id, dataset) {
     thePoltRV <- reactiveVal()
     thePlotDataRV <- reactiveVal()
     
-    SelectedDatasetRVs <- reactiveValues(
-      rawData = NULL,
-      colData = NULL
-    )
+    SelectedDatasetRVs <- reactiveValues(rawData = NULL,
+                                         colData = NULL)
     
-    observeEvent(input$cb_good_samples, {
+    observe({
       req(dataset$normData)
       req(dataset$colData)
       
       the_dataset <- preprocess_rawdata(dataset$rawData,
                                         dataset$colData,
-                                     input$cb_good_samples)
+                                        TRUE)
       
       SelectedDatasetRVs$rawData <- the_dataset$rawData
       SelectedDatasetRVs$colData <- the_dataset$colData
@@ -64,12 +63,16 @@ dlDimensionReductionServer <- function(id, dataset) {
       req(SelectedDatasetRVs$rawData)
       
       if (input$select_dr == "PCA") {
-        res <- pca_plot(SelectedDatasetRVs$rawData, SelectedDatasetRVs$colData)
+        res <-
+          pca_plot(SelectedDatasetRVs$rawData,
+                   SelectedDatasetRVs$colData)
         thePoltRV(res$plot)
         thePlotDataRV(res$data)
         
       } else if (input$select_dr == "UMAP") {
-        res <- umap_plot(SelectedDatasetRVs$rawData, SelectedDatasetRVs$colData)
+        res <-
+          umap_plot(SelectedDatasetRVs$rawData,
+                    SelectedDatasetRVs$colData)
         thePoltRV(res$plot)
         thePlotDataRV(res$data)
       }

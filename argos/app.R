@@ -21,7 +21,7 @@ shinyApp(ui, server)
 #   }
 # }
 
-    # currentGeneList <- reactiveVal()
-    # theMatrix <- reactiveVal()
-    # thePlotMatrix <- reactiveVal()
-    # theOutliers <- reactiveVal()
+# currentGeneList <- reactiveVal()
+# theMatrix <- reactiveVal()
+# thePlotMatrix <- reactiveVal()
+# theOutliers <- reactiveVal()

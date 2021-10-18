@@ -1,4 +1,4 @@
-#' A set of helper functions for Matrix Explore（me) Component
+#' A set of helper functions for Matrix Explore (me) Component
 #' 
 
 #' Calculate the percentage of the reads respect to the column sum.

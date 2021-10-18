@@ -12,7 +12,8 @@ ui <- dashboardPage(
       menuItem("Data Loader", tabName = "data_upload"),
       menuItem("Gene List Manager", tabName = "gene_list_manager"),
       menuItem("Data Exploration", tabName = "data_exp"),
-      menuItem("Time Series Inspection", tabName = "time_series")
+      menuItem("Time Series Inspection", tabName = "time_series"),
+      menuItem("Time Series Inference", tabName = "time_series_inf")
     )
   ),
   
@@ -23,11 +24,12 @@ ui <- dashboardPage(
       dataLoaderUI("dataLoader"),
       geneListManagerUI("geneListManager"),
       matrixExplorerUI("matrixExplorer"),
-      timeSeriesExplorerUI("timeSeriesExplorer")
+      timeSeriesExplorerUI("timeSeriesExplorer"),
+      timeSeriesInferenceUI("timeSeriesInference")
     )
   )
 )
 
 # Security  ----------------
 
-ui <- secure_app(ui)
+# ui <- secure_app(ui)

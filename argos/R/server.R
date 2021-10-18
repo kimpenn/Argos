@@ -3,7 +3,7 @@
 server <- function(input, output, session) {
   # Security  ----------------
   
-  res_auth <- secure_server(check_credentials = check_credentials(credentials))
+  # res_auth <- secure_server(check_credentials = check_credentials(credentials))
   
   # Data Loader ----------------
   
@@ -22,8 +22,12 @@ server <- function(input, output, session) {
                        argosDataSet, argosGeneList)
   
   
-  # Tab 2 Time Series Inspection  ----------------
+  # Tab 2 Time Series Exploration  ----------------
   timeSeriesExplorerServer("timeSeriesExplorer",
                            argosDataSet, argosGeneList)
   
+  # Tab 3 Time Series Inference  ----------------
+  argosInferenceDataSet <- timeSeriesInferenceLoaderServer("timeSeriesInference")
+  timeSeriesInferenceServer("timeSeriesInference", 
+                            argosInferenceDataSet, argosGeneList)
 }

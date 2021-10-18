@@ -2,12 +2,10 @@ version: "3.9"
 services: 
   argos-server:
     build: .
-    network_mode: host
     ports: 
-      - "3838:3838"
+      - "8787:8787"
     environment: 
       - PASSWORD=chad
+      - DISABLE_AUTH=true
     volumes: 
       - .:/home/rstudio
-    environment:
-      - "DISABLE_AUTH=true"

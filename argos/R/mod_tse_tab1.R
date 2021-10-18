@@ -31,7 +31,7 @@ tseTab1Server <- function(id, DatasetRVs, SelectedRVs) {
       colData = NULL
     )
     
-    observeEvent(SelectedRVs$goodSamplesOnly, {
+    observe({
       req(DatasetRVs$normData)
       req(DatasetRVs$colData)
       

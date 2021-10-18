@@ -5,8 +5,9 @@ account: kuangda
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 3682885
-bundleId: 4448096
+bundleId: 5148743
 url: https://kuangda.shinyapps.io/argos/
-when: 1617914166.39691
+when: 1634534407.2305
 asMultiple: FALSE
 asStatic: FALSE
+ignoredFiles: www-bk.zip|www/gene-list/corner_stone.csv
