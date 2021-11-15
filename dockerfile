@@ -2,7 +2,6 @@ FROM rocker/verse:latest
 RUN R -e "install.packages('shiny')"
 RUN R -e "install.packages('shinydashboard')"
 RUN R -e "install.packages('rsconnect')"
-RUN R -e "rsconnect::setAccountInfo(name='kuangda', token='87CA2421385C2F55D2B12CA85753FA63', secret='ajigQcspOT6c7nwJ60OmihcoOsk7iWZMogJ4iOx8')"
 RUN R -e "install.packages('profvis')"
 RUN R -e "install.packages('R.utils')"
 RUN R -e "install.packages('shinyFiles')"
